@@ -96,7 +96,9 @@
                     </div>
                     <button class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Write Review</button>
                     <div class="relative">
-                        <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full cursor-pointer">
+                        <a href="user.html">
+                            <img src="logo.jpg" alt="User profile avatar showing a neutral expression, set in a navigation bar for ClearVoice review and complaint platform" class="w-10 h-10 rounded-full cursor-pointer">
+                        </a></a>
                     </div>
                 </div>
             </div>
@@ -331,6 +333,31 @@
                     </div>
                 </div>
             </div>
+            <!-- Write Review Form (Hidden initially) -->
+<div id="reviewForm" class="bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+    <h2 class="text-xl font-medium mb-4">Write a Review</h2>
+    <form id="addReviewForm" class="space-y-4">
+        <input type="text" id="name" placeholder="Your Name" required
+            class="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+
+        <select id="rating" required
+            class="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+            <option value="">Select Rating</option>
+            <option value="5">★★★★★</option>
+            <option value="4">★★★★☆</option>
+            <option value="3">★★★☆☆</option>
+            <option value="2">★★☆☆☆</option>
+            <option value="1">★☆☆☆☆</option>
+        </select>
+
+        <textarea id="reviewText" rows="4" placeholder="Write your review..." required
+            class="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+
+        <button type="submit"
+            class="bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition">Submit Review</button>
+    </form>
+</div>
+
             
             <!-- Reviews Content -->
             <div class="lg:w-3/4">
@@ -645,6 +672,55 @@
     </footer>
 
     <script>
+        // Toggle Write Review form
+const writeReviewBtn = document.querySelector('button.bg-primary.text-white');
+const reviewForm = document.getElementById('reviewForm');
+
+writeReviewBtn.addEventListener('click', () => {
+    reviewForm.classList.toggle('hidden');
+    reviewForm.scrollIntoView({ behavior: 'smooth' });
+});
+
+// Handle form submission
+document.getElementById('addReviewForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const rating = document.getElementById('rating').value;
+    const reviewText = document.getElementById('reviewText').value;
+
+    // Create a new review card
+    const newReview = document.createElement('div');
+    newReview.className = "bg-white rounded-xl shadow-sm p-6 card";
+    newReview.innerHTML = `
+        <div class="flex items-start mb-4">
+            <img src="logo.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+            <div class="flex-1">
+                <div class="flex justify-between flex-wrap gap-2">
+                    <div>
+                        <h3 class="font-medium">${name}</h3>
+                        <div class="flex items-center">
+                            <div class="flex text-yellow-400">
+                                ${"★".repeat(rating)}${"☆".repeat(5-rating)}
+                            </div>
+                            <span class="text-gray-500 text-sm ml-2">Just now</span>
+                        </div>
+                    </div>
+                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">New Review</div>
+                </div>
+                <p class="text-gray-700 my-4">${reviewText}</p>
+            </div>
+        </div>
+    `;
+
+    // Add it at the top of reviews list
+    document.querySelector('.space-y-6').prepend(newReview);
+
+    // Reset form
+    this.reset();
+    reviewForm.classList.add('hidden');
+});
+
         // Interactive filter functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Checkbox functionality

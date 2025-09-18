@@ -119,7 +119,9 @@
                     </div>
                     <button class="bg-accent text-white px-4 py-2 rounded-md font-medium hover:bg-pink-600 transition">Submit Complaint</button>
                     <div class="relative">
-                        <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full cursor-pointer">
+                        <a href="user.html">
+                            <img src="logo.jpg" alt="User profile avatar showing a neutral expression, set in a navigation bar for ClearVoice review and complaint platform" class="w-10 h-10 rounded-full cursor-pointer">
+                        </a></a>
                     </div>
                 </div>
             </div>
@@ -716,6 +718,48 @@
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("complaintForm");
+    const table = document.getElementById("complaintsTable");
+    const complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    complaints.forEach(c => addComplaintRow(c));
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const product = document.getElementById("complaintProduct").value;
+        const issue = document.getElementById("complaintText").value;
+
+        const complaint = { product, issue, status: "Pending" };
+        complaints.push(complaint);
+        localStorage.setItem("complaints", JSON.stringify(complaints));
+
+        addComplaintRow(complaint);
+        form.reset();
+    });
+
+    function addComplaintRow({ product, issue, status }) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="px-4 py-2">${product}</td>
+            <td class="px-4 py-2">${issue}</td>
+            <td class="px-4 py-2 status">${status}</td>
+            <td class="px-4 py-2">
+                <button class="bg-green-500 text-white px-2 py-1 rounded changeStatus">Update</button>
+            </td>
+        `;
+        table.appendChild(row);
+
+        row.querySelector(".changeStatus").addEventListener("click", () => {
+            if (row.querySelector(".status").innerText === "Pending") {
+                row.querySelector(".status").innerText = "In Progress";
+            } else {
+                row.querySelector(".status").innerText = "Resolved";
+            }
+        });
+    }
+});
+
         // Interactive filter functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Checkbox functionality
