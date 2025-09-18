@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - ClearVoice</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        secondary: '#3a0ca3',
+                        accent: '#f72585',
+                        light: '#f8f9fa',
+                        dark: '#212529'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .password-toggle {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .password-toggle:hover {
+            color: #4361ee;
+        }
+        .input-field:focus {
+            outline: none;
+            /* ring: 2px; */
+        }
+        .checkbox:checked {
+            background-color: #4361ee;
+            border-color: #4361ee;
+        }
+        .auth-bg {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        }
+        .social-btn {
+            transition: all 0.3s;
+        }
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-dark">ClearVoice</span>
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-primary">Home</a>
+                    <a href="product.html" class="text-gray-600 hover:text-primary">Products</a>
+                    <a href="reviews.html" class="text-gray-600 hover:text-primary">Reviews</a>
+                    <a href="complaints.html" class="text-gray-600 hover:text-primary">Complaints</a>
+                    <a href="compare.html" class="text-gray-600 hover:text-primary">Compare</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- <a href="login.html" class="text-gray-600 hover:text-primary">Login</a> -->
+                    <a href="signup.html" class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 flex flex-col lg:flex-row items-center justify-center min-h-[80vh]">
+        <!-- Left Column - Form -->
+        <div class="w-full lg:w-1/2 max-w-md lg:max-w-lg xl:max-w-xl">
+            <div class="bg-white rounded-xl shadow-sm p-8 card">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-dark mb-2">Create Your Account</h1>
+                    <p class="text-gray-600">Join ClearVoice to share authentic reviews and resolve complaints</p>
+                </div>
+                
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="firstName" class="block text-gray-700 mb-2">First Name</label>
+                            <div class="relative">
+                                <input type="text" id="firstName" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary input-field" placeholder="Enter your first name">
+                                <i class="fas fa-user absolute right-3 top-3.5 text-gray-400"></i>
+                            </div>
+                            <p class="text-red-500 text-sm mt-1 hidden" id="firstNameError">Please enter a valid first name</p>
+                        </div>
+                        
+                        <div>
+                            <label for="lastName" class="block text-gray-700 mb-2">Last Name</label>
+                            <div class="relative">
+                                <input type="text" id="lastName" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary input-field" placeholder="Enter your last name">
+                                <i class="fas fa-user absolute right-3 top-3.5 text-gray-400"></i>
+                            </div>
+                            <p class="text-red-500 text-sm mt-1 hidden" id="lastNameError">Please enter a valid last name</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="email" class="block text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary input-field" placeholder="Enter your email">
+                            <i class="fas fa-envelope absolute right-3 top-3.5 text-gray-400"></i>
+                        </div>
+                        <p class="text-red-500 text-sm mt-1 hidden" id="emailError">Please enter a valid email address</p>
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary input-field" placeholder="Create a strong password">
+                            <i class="fas fa-eye-slash password-toggle absolute right-3 top-3.5 text-gray-400" id="passwordToggle"></i>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center mb-1">
+                                <div class="w-1/4 h-1.5 bg-gray-200 rounded-full mr-1">
+                                    <div class="h-1.5 rounded-full bg-red-500" id="strengthBar1"></div>
+                                </div>
+                                <div class="w-1/4 h-1.5 bg-gray-200 rounded-full mr-1">
+                                    <div class="h-1.5 rounded-full bg-gray-200" id="strengthBar2"></div>
+                                </div>
+                                <div class="w-1/4 h-1.5 bg-gray-200 rounded-full mr-1">
+                                    <div class="h-1.5 rounded-full bg-gray-200" id="strengthBar3"></div>
+                                </div>
+                                <div class="w-1/4 h-1.5 bg-gray-200 rounded-full">
+                                    <div class="h-1.5 rounded-full bg-gray-200" id="strengthBar4"></div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500" id="passwordStrength">Password strength: Very weak</p>
+                        </div>
+                        <p class="text-red-500 text-sm mt-1 hidden" id="passwordError">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p>
+                    </div>
+                    
+                    <div>
+                        <label for="confirmPassword" class="block text-gray-700 mb-2">Confirm Password</label>
+                        <div class="relative">
+                            <input type="password" id="confirmPassword" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary input-field" placeholder="Confirm your password">
+                            <i class="fas fa-lock absolute right-3 top-3.5 text-gray-400"></i>
+                        </div>
+                        <p class="text-red-500 text-sm mt-1 hidden" id="confirmPasswordError">Passwords do not match</p>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" class="checkbox h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        <label for="terms" class="ml-2 block text-sm text-gray-700">
+                            I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <p class="text-red-500 text-sm mt-1 hidden" id="termsError">You must accept the terms and conditions</p>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="newsletter" class="checkbox h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" checked>
+                        <label for="newsletter" class="ml-2 block text-sm text-gray-700">
+                            Send me product updates and newsletters
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary text-white py-3 px-4 rounded-md font-medium hover:bg-secondary transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                        Create Account
+                    </button>
+                </form>
+                
+                <div class="mt-6">
+                    <div class="relative flex items-center">
+                        <div class="flex-grow border-t border-gray-300"></div>
+                        <span class="flex-shrink mx-4 text-gray-600">Or continue with</span>
+                        <div class="flex-grow border-t border-gray-300"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <a href="#" class="social-btn bg-white border border-gray-300 text-gray-700 py-2.5 px-4 rounded-md font-medium flex items-center justify-center hover:bg-gray-50">
+                            <i class="fab fa-google text-red-500 mr-2"></i> Google
+                        </a>
+                        <a href="#" class="social-btn bg-blue-600 text-white py-2.5 px-4 rounded-md font-medium flex items-center justify-center hover:bg-blue-700">
+                            <i class="fab fa-facebook-f mr-2"></i> Facebook
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">Already have an account? <a href="login.html" class="text-primary font-medium hover:underline">Log in</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Illustration & Features -->
+        <div class="hidden lg:block w-1/2 max-w-md lg:max-w-lg xl:max-w-xl ml-12">
+            <div class="auth-bg rounded-2xl p-8 text-white">
+                <h2 class="text-2xl font-bold mb-6">Why Join ClearVoice?</h2>
+                
+                <div class="space-y-6 mb-8">
+                    <div class="flex items-start">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-full mr-4">
+                            <i class="fas fa-star text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-lg mb-1">Share Authentic Reviews</h3>
+                            <p class="text-white text-opacity-90">Help others make informed decisions with your verified experiences</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-full mr-4">
+                            <i class="fas fa-shield-alt text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-lg mb-1">AI-Powered Protection</h3>
+                            <p class="text-white text-opacity-90">Our system detects and filters fake reviews to maintain authenticity</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-full mr-4">
+                            <i class="fas fa-flag text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-lg mb-1">Resolve Complaints</h3>
+                            <p class="text-white text-opacity-90">Get help with product issues and track resolution progress</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-full mr-4">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-lg mb-1">Track Trust Scores</h3>
+                            <p class="text-white text-opacity-90">See dynamic trust scores for products based on authentic reviews</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-xl p-4">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <img src="https://via.placeholder.com/50" alt="User" class="w-12 h-12 rounded-full">
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-medium">"ClearVoice helped me resolve my product issue in just 3 days. The platform is transparent and effective!"</p>
+                            <p class="text-sm mt-1 text-white text-opacity-80">- Sarah Johnson, Verified User</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ClearVoice</span>
+                    </div>
+                    <p class="text-gray-400">The authentic review and complaint platform that puts consumers first.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="products.html" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="reviews.html" class="text-gray-400 hover:text-white">Reviews</a></li>
+                        <li><a href="complaints.html" class="text-gray-400 hover:text-white">Complaints</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Subscribe</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest features and news.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-md w-full text-dark">
+                        <button class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-secondary transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ClearVoice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password visibility toggle
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordField = document.getElementById('password');
+            
+            passwordToggle.addEventListener('click', function() {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordToggle.classList.remove('fa-eye-slash');
+                    passwordToggle.classList.add('fa-eye');
+                } else {
+                    passwordField.type = 'password';
+                    passwordToggle.classList.remove('fa-eye');
+                    passwordToggle.classList.add('fa-eye-slash');
+                }
+            });
+            
+            // Password strength meter
+            const passwordStrengthText = document.getElementById('passwordStrength');
+            const strengthBars = [
+                document.getElementById('strengthBar1'),
+                document.getElementById('strengthBar2'),
+                document.getElementById('strengthBar3'),
+                document.getElementById('strengthBar4')
+            ];
+            
+            passwordField.addEventListener('input', function() {
+                const password = passwordField.value;
+                let strength = 0;
+                
+                // Check password strength
+                if (password.length >= 8) strength++;
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+                if (password.match(/\d/)) strength++;
+                if (password.match(/[^a-zA-Z\d]/)) strength++;
+                
+                // Update strength bars
+                strengthBars.forEach((bar, index) => {
+                    if (index < strength) {
+                        // Color based on strength
+                        if (strength === 1) bar.classList.add('bg-red-500');
+                        else if (strength === 2) bar.classList.add('bg-orange-500');
+                        else if (strength === 3) bar.classList.add('bg-yellow-500');
+                        else if (strength === 4) bar.classList.add('bg-green-500');
+                        
+                        // Remove other colors
+                        bar.classList.remove('bg-gray-200');
+                        bar.classList.remove('bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500');
+                        
+                        if (strength === 1) bar.classList.add('bg-red-500');
+                        else if (strength === 2) bar.classList.add('bg-orange-500');
+                        else if (strength === 3) bar.classList.add('bg-yellow-500');
+                        else if (strength === 4) bar.classList.add('bg-green-500');
+                    } else {
+                        bar.classList.add('bg-gray-200');
+                        bar.classList.remove('bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500');
+                    }
+                });
+                
+                // Update strength text
+                const strengthText = [
+                    'Very weak',
+                    'Weak',
+                    'Medium',
+                    'Strong',
+                    'Very strong'
+                ];
+                passwordStrengthText.textContent = `Password strength: ${strengthText[strength]}`;
+            });
+            
+            // Form validation
+            const form = document.querySelector('form');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const terms = document.getElementById('terms');
+            
+            const firstNameError = document.getElementById('firstNameError');
+            const lastNameError = document.getElementById('lastNameError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            const termsError = document.getElementById('termsError');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Reset errors
+                [firstNameError, lastNameError, emailError, passwordError, confirmPasswordError, termsError].forEach(
+                    el => el.classList.add('hidden')
+                );
+                
+                // Validate first name
+                if (!firstName.value.trim()) {
+                    firstNameError.textContent = 'First name is required';
+                    firstNameError.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                // Validate last name
+                if (!lastName.value.trim()) {
+                    lastNameError.textContent = 'Last name is required';
+                    lastNameError.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email.value.match(emailRegex)) {
+                    emailError.textContent = 'Please enter a valid email address';
+                    emailError.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                // Validate password
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/;
+                if (!password.value.match(passwordRegex)) {
+                    passwordError.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                // Validate confirm password
+                if (password.value !== confirmPassword.value) {
+                    confirmPasswordError.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                // Validate terms
+                if (!terms.checked) {
+                    termsError.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Form is valid, simulate submission
+                    alert('Account created successfully! Redirecting to login...');
+                    // In a real application, you would submit the form to your backend
+                }
+            });
+        });
+    </script>
+</body>
+</html>

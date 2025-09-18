@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearVoice - Authentic Reviews & Complaint Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        secondary: '#3a0ca3',
+                        accent: '#f72585',
+                        light: '#f8f9fa',
+                        dark: '#212529'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-dark">ClearVoice</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-primary font-medium">Home</a>
+                    <a href="product.html" class="text-gray-600 hover:text-primary">Products</a>
+                    <a href="reviews.html" class="text-gray-600 hover:text-primary">Reviews</a>
+                    <a href="complaints.html" class="text-gray-600 hover:text-primary">Complaints</a>
+                    <a href="compare.html" class="text-gray-600 hover:text-primary">Compare</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="signup.html" <button class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Sign Up</button></a>
+                    <a href="login.html" <button class="text-gray-600 hover:text-primary">Login</button></a>
+                    <div class="relative">
+                        <a href="user.html">
+                            <img src="https://via.placeholder.com/40" alt="User profile avatar showing a neutral expression, set in a navigation bar for ClearVoice review and complaint platform" class="w-10 h-10 rounded-full cursor-pointer">
+                        </a></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-primary to-secondary text-white rounded-xl p-8 mb-12">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl font-bold mb-4">Authentic Reviews & Complaint Platform</h1>
+                <p class="text-xl mb-6">Where your voice matters. Share genuine experiences, resolve issues, and discover trustworthy products.</p>
+                <div class="flex space-x-4">
+                    <button class="bg-white text-primary px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition">Write a Review</button>
+                    <button class="bg-accent text-white px-6 py-3 rounded-md font-medium hover:bg-pink-600 transition">Submit Complaint</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Overview -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Your Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-gray-500">Reviews</h3>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-3xl font-bold">12</p>
+                    <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 3 this month</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-gray-500">Complaints</h3>
+                        <i class="fas fa-exclamation-circle text-red-500"></i>
+                    </div>
+                    <p class="text-3xl font-bold">5</p>
+                    <p class="text-gray-500 text-sm mt-2">2 pending resolution</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-gray-500">Trust Score</h3>
+                        <i class="fas fa-shield-alt text-primary"></i>
+                    </div>
+                    <p class="text-3xl font-bold">87%</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                        <div class="bg-primary h-2.5 rounded-full" style="width: 87%"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-gray-500">Products Tracked</h3>
+                        <i class="fas fa-boxes text-green-500"></i>
+                    </div>
+                    <p class="text-3xl font-bold">8</p>
+                    <p class="text-gray-500 text-sm mt-2">3 with new reviews</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Review System -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Recent Reviews</h2>
+                <button class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Write a Review</button>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="border-b border-gray-100 p-4 flex items-center">
+                    <div class="flex-1">
+                        <h3 class="font-medium">Submit a Review</h3>
+                        <p class="text-sm text-gray-500">Only verified buyers can post reviews</p>
+                    </div>
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md font-medium flex items-center">
+                        <i class="fas fa-plus mr-2"></i> New Review
+                    </button>
+                </div>
+                
+                <div class="p-6">
+                    <form id="review-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="product">Product</label>
+                                <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option>Select a product</option>
+                                    <option>iPhone 13 Pro</option>
+                                    <option>Samsung Galaxy S22</option>
+                                    <option>Google Pixel 6</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2" for="purchase-id">Purchase ID</label>
+                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter purchase verification ID">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="rating">Rating</label>
+                            <div class="flex space-x-1">
+                                <i class="fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400"></i>
+                                <i class="fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400"></i>
+                                <i class="fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400"></i>
+                                <i class="fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400"></i>
+                                <i class="fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="review">Review</label>
+                            <textarea class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" rows="4" placeholder="Share your experience with this product"></textarea>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm text-gray-500">
+                                <i class="fas fa-robot mr-2"></i> AI sentiment analysis will verify your review
+                            </div>
+                            <button type="submit" class="bg-primary text-white px-6 py-2 rounded-md font-medium hover:bg-secondary transition">Submit Review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex items-start mb-4">
+                        <img src="user1.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-medium">John D.</h3>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">The battery life is exceptional! Lasts me all day even with heavy usage. Camera quality is impressive too.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded mr-2">Verified Purchase</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">Positive Sentiment</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex items-start mb-4">
+                        <img src="user8.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-medium">Sarah M.</h3>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="text-gray-500 text-sm ml-2">5 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">Good phone but the charging speed could be better. Also experienced some overheating during gaming sessions.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded mr-2">Verified Purchase</span>
+                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded">Mixed Sentiment</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Complaint Management -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Your Complaints</h2>
+                <button class="bg-accent text-white px-4 py-2 rounded-md font-medium hover:bg-pink-600 transition">Submit Complaint</button>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="border-b border-gray-100 p-4">
+                    <h3 class="font-medium">Complaint Status</h3>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <img src="iphone2.jpg" alt="Product" class="w-10 h-10 rounded mr-3">
+                                        <div>
+                                            <div class="font-medium">iPhone 13 Pro</div>
+                                            <div class="text-sm text-gray-500">Electronics</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">Screen flickering issue</td>
+                                <td class="px-6 py-4">Oct 12, 2023</td>
+                                <td class="px-6 py-4">
+                                    <span class="status-badge status-progress">In Progress</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-primary hover:text-secondary mr-3"><i class="fas fa-eye"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-escalator"></i> Escalate</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <img src="earbuds.jpg" alt="Product" class="w-10 h-10 rounded mr-3">
+                                        <div>
+                                            <div class="font-medium">Wireless Earbuds</div>
+                                            <div class="text-sm text-gray-500">Audio</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">Left earbud not charging</td>
+                                <td class="px-6 py-4">Oct 5, 2023</td>
+                                <td class="px-6 py-4">
+                                    <span class="status-badge status-resolved">Resolved</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-primary hover:text-secondary"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <img src="smartwatch.jpg" alt="Product" class="w-10 h-10 rounded mr-3">
+                                        <div>
+                                            <div class="font-medium">Smart Watch</div>
+                                            <div class="text-sm text-gray-500">Wearables</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">Battery draining too fast</td>
+                                <td class="px-6 py-4">Sept 28, 2023</td>
+                                <td class="px-6 py-4">
+                                    <span class="status-badge status-pending">Pending</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-primary hover:text-secondary mr-3"><i class="fas fa-eye"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-escalator"></i> Escalate</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Score System -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Product Trust Scores</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex items-center mb-4">
+                        <img src="iphone.jpg" alt="Product" class="w-16 h-16 rounded mr-4">
+                        <div>
+                            <h3 class="font-medium">iPhone 13 Pro</h3>
+                            <p class="text-gray-500">Apple</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium">Trust Score</span>
+                            <span class="text-sm font-bold text-primary">92%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-primary h-2.5 rounded-full" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <div class="text-lg font-bold">4.7</div>
+                            <div class="text-sm text-gray-500">Avg Rating</div>
+                        </div>
+                        <div>
+                            <div class="text-lg font-bold">87%</div>
+                            <div class="text-sm text-gray-500">Resolution Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/60" alt="Product" class="w-16 h-16 rounded mr-4">
+                        <div>
+                            <h3 class="font-medium">Galaxy S22</h3>
+                            <p class="text-gray-500">Samsung</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium">Trust Score</span>
+                            <span class="text-sm font-bold text-primary">85%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <div class="text-lg font-bold">4.3</div>
+                            <div class="text-sm text-gray-500">Avg Rating</div>
+                        </div>
+                        <div>
+                            <div class="text-lg font-bold">79%</div>
+                            <div class="text-sm text-gray-500">Resolution Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/60" alt="Product" class="w-16 h-16 rounded mr-4">
+                        <div>
+                            <h3 class="font-medium">Pixel 6</h3>
+                            <p class="text-gray-500">Google</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium">Trust Score</span>
+                            <span class="text-sm font-bold text-primary">89%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-primary h-2.5 rounded-full" style="width: 89%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <div class="text-lg font-bold">4.5</div>
+                            <div class="text-sm text-gray-500">Avg Rating</div>
+                        </div>
+                        <div>
+                            <div class="text-lg font-bold">83%</div>
+                            <div class="text-sm text-gray-500">Resolution Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Dashboard -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Analytics Dashboard</h2>
+            
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-medium mb-4">Complaint Trends</h3>
+                        <canvas id="complaintTrendsChart" height="250"></canvas>
+                    </div>
+                    <div>
+                        <h3 class="font-medium mb-4">Top Pain Points</h3>
+                        <canvas id="painPointsChart" height="250"></canvas>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="font-medium mb-4">Satisfaction Levels</h3>
+                    <canvas id="satisfactionChart" height="150"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Tool -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Compare Products</h2>
+            
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <select class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option>Select first product</option>
+                        <option>iPhone 13 Pro</option>
+                        <option>Samsung Galaxy S22</option>
+                        <option>Google Pixel 6</option>
+                    </select>
+                    
+                    <select class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option>Select second product</option>
+                        <option>iPhone 13 Pro</option>
+                        <option>Samsung Galaxy S22</option>
+                        <option>Google Pixel 6</option>
+                    </select>
+                    
+                    <button class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Compare</button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Feature</th>
+                                <th scope="col" class="px-6 py-3">iPhone 13 Pro</th>
+                                <th scope="col" class="px-6 py-3">Samsung Galaxy S22</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium">Trust Score</th>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                            <div class="bg-primary h-2.5 rounded-full" style="width: 92%"></div>
+                                        </div>
+                                        <span>92%</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                            <div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div>
+                                        </div>
+                                        <span>85%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <th scope="row" class="px-6 py-4 font-medium">Average Rating</th>
+                                <td class="px-6 py-4">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <span class="ml-2 text-gray-700">4.7</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <span class="ml-2 text-gray-700">4.3</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium">Complaints</th>
+                                <td class="px-6 py-4">24</td>
+                                <td class="px-6 py-4">31</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <th scope="row" class="px-6 py-4 font-medium">Resolution Rate</th>
+                                <td class="px-6 py-4">87%</td>
+                                <td class="px-6 py-4">79%</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <th scope="row" class="px-6 py-4 font-medium">Verified Reviews</th>
+                                <td class="px-6 py-4">1,243</td>
+                                <td class="px-6 py-4">987</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Future Features -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Coming Soon</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="text-4xl text-primary mb-4">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3 class="font-medium text-lg mb-2">Blockchain Verification</h3>
+                    <p class="text-gray-600">Immutable review storage using blockchain technology to ensure authenticity and prevent tampering.</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="text-4xl text-primary mb-4">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3 class="font-medium text-lg mb-2">Voice & Video Reviews</h3>
+                    <p class="text-gray-600">Share your experiences through voice messages or video reviews for more authentic feedback.</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card">
+                    <div class="text-4xl text-primary mb-4">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="font-medium text-lg mb-2">Multilingual Support</h3>
+                    <p class="text-gray-600">Global platform supporting multiple languages to serve users from different regions.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ClearVoice</span>
+                    </div>
+                    <p class="text-gray-400">The authentic review and complaint platform that puts consumers first.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Subscribe</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest features and news.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-md w-full text-dark">
+                        <button class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-secondary transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ClearVoice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Charts initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Complaint Trends Chart
+            const complaintCtx = document.getElementById('complaintTrendsChart').getContext('2d');
+            const complaintChart = new Chart(complaintCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [{
+                        label: 'Complaints',
+                        data: [65, 59, 80, 81, 56, 55, 72, 68, 75, 60],
+                        borderColor: '#4361ee',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+            
+            // Pain Points Chart
+            const painPointsCtx = document.getElementById('painPointsChart').getContext('2d');
+            const painPointsChart = new Chart(painPointsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Battery', 'Screen', 'Performance', 'Camera', 'Software'],
+                    datasets: [{
+                        data: [30, 22, 18, 15, 15],
+                        backgroundColor: [
+                            '#4361ee',
+                            '#3a0ca3',
+                            '#f72585',
+                            '#4cc9f0',
+                            '#4895ef'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+            
+            // Satisfaction Chart
+            const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+            const satisfactionChart = new Chart(satisfactionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [{
+                        label: 'Satisfaction Rate',
+                        data: [85, 78, 90, 88, 82, 84, 86, 89, 91, 87],
+                        backgroundColor: '#4361ee'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Star rating functionality
+            const stars = document.querySelectorAll('.fa-star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rating');
+                    // Reset all stars
+                    stars.forEach(s => {
+                        s.classList.remove('text-yellow-400');
+                        s.classList.add('text-gray-300');
+                    });
+                    
+                    // Color stars up to the clicked one
+                    for (let i = 0; i < rating; i++) {
+                        stars[i].classList.remove('text-gray-300');
+                        stars[i].classList.add('text-yellow-400');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

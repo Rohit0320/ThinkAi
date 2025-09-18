@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - ClearVoice</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        secondary: '#3a0ca3',
+                        accent: '#f72585',
+                        light: '#f8f9fa',
+                        dark: '#212529'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .trust-score-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-pending {
+            background-color: #ffeed9;
+            color: #e67700;
+        }
+        .status-progress {
+            background-color: #e0e8ff;
+            color: #4263eb;
+        }
+        .status-resolved {
+            background-color: #d3f9d8;
+            color: #2b8a3e;
+        }
+        .review-image {
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .review-image:hover {
+            transform: scale(1.05);
+        }
+        .filter-checkbox:checked + span {
+            background-color: #4361ee;
+            color: white;
+        }
+        .review-helpful-btn.active {
+            color: #4361ee;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-dark">ClearVoice</span>
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-primary">Home</a>
+                    <a href="product.html" class="text-gray-600 hover:text-primary">Products</a>
+                    <a href="reviews.html" class="text-primary font-medium">Reviews</a>
+                    <a href="complaints.html" class="text-gray-600 hover:text-primary">Complaints</a>
+                    <a href="compare.html" class="text-gray-600 hover:text-primary">Compare</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input type="text" placeholder="Search reviews..." class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Write Review</button>
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-dark mb-2">Customer Reviews</h1>
+            <p class="text-gray-600">Discover authentic experiences from verified buyers</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Filters Sidebar -->
+            <div class="lg:w-1/4">
+                <div class="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+                    <h2 class="text-lg font-medium mb-4">Filters</h2>
+                    
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3">Rating</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-600">5 Stars (832)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="ml-2 text-gray-600">4 Stars (456)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="ml-2 text-gray-600">3 Stars (198)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="ml-2 text-gray-600">2 Stars (74)</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="ml-2 text-gray-600">1 Star (32)</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3">Product Category</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">Smartphones (643)</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">Laptops (432)</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">Headphones (287)</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">Smart Home (154)</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">Wearables (121)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3">Features</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden" checked>
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center bg-primary">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">Verified Purchase</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">With Images</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="filter-checkbox hidden">
+                                <span class="w-5 h-5 border border-gray-300 rounded-md mr-2 flex items-center justify-center">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </span>
+                                <span class="text-gray-600">With Video</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3">Date Posted</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="date" class="hidden" checked>
+                                <span class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center relative">
+                                    <span class="w-2 h-2 rounded-full bg-primary hidden"></span>
+                                </span>
+                                <span class="text-gray-600">Last 30 days</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="date" class="hidden">
+                                <span class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center relative">
+                                    <span class="w-2 h-2 rounded-full bg-primary hidden"></span>
+                                </span>
+                                <span class="text-gray-600">Last 3 months</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="date" class="hidden">
+                                <span class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center relative">
+                                    <span class="w-2 h-2 rounded-full bg-primary hidden"></span>
+                                </span>
+                                <span class="text-gray-600">Last 6 months</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="date" class="hidden">
+                                <span class="w-4 h-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center relative">
+                                    <span class="w-2 h-2 rounded-full bg-primary hidden"></span>
+                                </span>
+                                <span class="text-gray-600">All time</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Apply Filters</button>
+                    <button class="w-full mt-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-md font-medium hover:bg-gray-200 transition">Reset Filters</button>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 mt-6">
+                    <h2 class="text-lg font-medium mb-4">Review Insights</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium">Positive Sentiment</span>
+                                <span class="text-sm font-bold text-primary">87%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 87%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium">Verified Reviews</span>
+                                <span class="text-sm font-bold text-primary">92%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium">With Media</span>
+                                <span class="text-sm font-bold text-primary">45%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews Content -->
+            <div class="lg:w-3/4">
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <h2 class="text-xl font-medium">1,593 Reviews</h2>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <select class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option>Most Relevant</option>
+                                <option>Newest First</option>
+                                <option>Highest Rated</option>
+                                <option>Lowest Rated</option>
+                                <option>Most Helpful</option>
+                            </select>
+                            
+                            <div class="flex">
+                                <button class="px-3 py-2 border border-gray-300 rounded-l-md hover:bg-gray-100">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                                <button class="px-3 py-2 border border-gray-300 rounded-r-md border-l-0 hover:bg-gray-100">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Review 1 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start mb-4">
+                            <img src="user1.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between flex-wrap gap-2">
+                                    <div>
+                                        <h3 class="font-medium">John D.</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </div>
+                                            <span class="text-gray-500 text-sm ml-2">2 days ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Verified Purchase</div>
+                                </div>
+                                <div class="flex items-center mt-2">
+                                    <img src="iphone2.jpg" alt="Product" class="w-8 h-8 rounded mr-2">
+                                    <span class="text-sm text-gray-600">iPhone 13 Pro</span>
+                                </div>
+                                <p class="text-gray-700 my-4">The battery life is exceptional! Lasts me all day even with heavy usage. Camera quality is impressive too, especially the night mode. The 120Hz display is smooth and makes everything feel premium.</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Battery</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Camera</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Display</span>
+                                </div>
+                               
+                                <div class="text-sm text-gray-500">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">Positive Sentiment</span>
+                                    <span>AI Analysis: 94% authentic</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 pt-4 border-t">
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4 review-helpful-btn">
+                                <i class="far fa-thumbs-up mr-1"></i> Helpful (24)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="far fa-comment mr-1"></i> Comment (5)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="fas fa-share-alt mr-1"></i> Share
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary">
+                                <i class="far fa-flag mr-1"></i> Report
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Review 2 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start mb-4">
+                            <img src="user11.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between flex-wrap gap-2">
+                                    <div>
+                                        <h3 class="font-medium">Sarah M.</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                            <span class="text-gray-500 text-sm ml-2">5 days ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Verified Purchase</div>
+                                </div>
+                                <div class="flex items-center mt-2">
+                                    <img src="macbook pro 1.jpg" alt="Product" class="w-8 h-8 rounded mr-2">
+                                    <span class="text-sm text-gray-600">MacBook Pro 1"</span>
+                                </div>
+                                <p class="text-gray-700 my-4">Good performance but the battery life isn't as advertised. The M1 Pro chip is blazing fast for my development work, but I only get about 6-7 hours of actual use instead of the promised 10+ hours. The build quality is excellent though.</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Performance</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Battery</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Build Quality</span>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded mr-2">Mixed Sentiment</span>
+                                    <span>AI Analysis: 89% authentic</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 pt-4 border-t">
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4 review-helpful-btn">
+                                <i class="far fa-thumbs-up mr-1"></i> Helpful (12)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="far fa-comment mr-1"></i> Comment (3)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="fas fa-share-alt mr-1"></i> Share
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary">
+                                <i class="far fa-flag mr-1"></i> Report
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Review 3 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start mb-4">
+                            <img src="user5.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between flex-wrap gap-2">
+                                    <div>
+                                        <h3 class="font-medium">Michael T.</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <span class="text-gray-500 text-sm ml-2">1 week ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Verified Purchase</div>
+                                </div>
+                                <div class="flex items-center mt-2">
+                                    <img src="headset.jpg" alt="Product" class="w-8 h-8 rounded mr-2">
+                                    <span class="text-sm text-gray-600">headset</span>
+                                </div>
+                                <p class="text-gray-700 my-4">Absolutely love these headphones! The noise cancellation is incredible - I can't even hear my noisy office when they're on. Battery life is outstanding, easily lasting through a full work week of use. The sound quality is rich and balanced.</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Noise Cancellation</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Battery Life</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Sound Quality</span>
+                                </div>
+                                <div class="flex space-x-2 mb-4">
+                                    <img src="https://via.placeholder.com/100" alt="Review image" class="w-20 h-20 rounded-md object-cover review-image">
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded mr-2">Positive Sentiment</span>
+                                    <span>AI Analysis: 97% authentic</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 pt-4 border-t">
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4 review-helpful-btn">
+                                <i class="far fa-thumbs-up mr-1"></i> Helpful (42)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="far fa-comment mr-1"></i> Comment (8)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="fas fa-share-alt mr-1"></i> Share
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary">
+                                <i class="far fa-flag mr-1"></i> Report
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Review 4 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start mb-4">
+                            <img src="user10.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between flex-wrap gap-2">
+                                    <div>
+                                        <h3 class="font-medium">Lisa R.</h3>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                            <span class="text-gray-500 text-sm ml-2">2 weeks ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Verified Purchase</div>
+                                </div>
+                                <div class="flex items-center mt-2">
+                                    <img src="TV.jpg" alt="Product" class="w-8 h-8 rounded mr-2">
+                                    <span class="text-sm text-gray-600">Smart TV</span>
+                                </div>
+                                <p class="text-gray-700 my-4">Disappointed with this TV. The picture quality is good but the smart interface is incredibly slow and buggy. Apps crash frequently and the remote has connectivity issues. Would not recommend unless you plan to use an external streaming device.</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Picture Quality</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Smart Interface</span>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Remote</span>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded mr-2">Negative Sentiment</span>
+                                    <span>AI Analysis: 91% authentic</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 pt-4 border-t">
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4 review-helpful-btn">
+                                <i class="far fa-thumbs-up mr-1"></i> Helpful (18)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="far fa-comment mr-1"></i> Comment (2)
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary mr-4">
+                                <i class="fas fa-share-alt mr-1"></i> Share
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-primary">
+                                <i class="far fa-flag mr-1"></i> Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="flex justify-center mt-8">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="px-3 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-100">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        <a href="#" class="px-3 py-1 rounded-md border border-primary bg-primary text-white">1</a>
+                        <a href="#" class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100">2</a>
+                        <a href="#" class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100">3</a>
+                        <span class="px-2 py-1 text-gray-500">...</span>
+                        <a href="#" class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100">8</a>
+                        <a href="#" class="px-3 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-100">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ClearVoice</span>
+                    </div>
+                    <p class="text-gray-400">The authentic review and complaint platform that puts consumers first.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="products.html" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="reviews.html" class="text-gray-400 hover:text-white">Reviews</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Subscribe</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest features and news.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-md w-full text-dark">
+                        <button class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-secondary transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ClearVoice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Checkbox functionality
+            const checkboxes = document.querySelectorAll('.filter-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const checkmark = this.nextElementSibling;
+                    if (this.checked) {
+                        checkmark.classList.add('bg-primary');
+                    } else {
+                        checkmark.classList.remove('bg-primary');
+                    }
+                });
+            });
+            
+            // Radio button functionality
+            const radios = document.querySelectorAll('input[type="radio"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const allSpans = document.querySelectorAll('input[type="radio"] + span > span');
+                    allSpans.forEach(span => span.classList.add('hidden'));
+                    
+                    const selectedSpan = this.nextElementSibling.querySelector('span');
+                    selectedSpan.classList.remove('hidden');
+                });
+            });
+            
+            // Initialize radio buttons
+            document.querySelectorAll('input[type="radio"] + span > span').forEach(span => {
+                span.classList.add('hidden');
+            });
+            document.querySelector('input[type="radio"]:checked + span > span').classList.remove('hidden');
+            
+            // Helpful button functionality
+            const helpfulButtons = document.querySelectorAll('.review-helpful-btn');
+            helpfulButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    this.classList.toggle('text-primary');
+                    
+                    const icon = this.querySelector('i');
+                    if (this.classList.contains('active')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

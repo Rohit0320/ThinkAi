@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ClearVoice</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        secondary: '#3a0ca3',
+                        accent: '#f72585',
+                        light: '#f8f9fa',
+                        dark: '#212529'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-pending {
+            background-color: #ffeed9;
+            color: #e67700;
+        }
+        .status-progress {
+            background-color: #e0e8ff;
+            color: #4263eb;
+        }
+        .status-resolved {
+            background-color: #d3f9d8;
+            color: #2b8a3e;
+        }
+        .nav-item {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-item.active {
+            color: #4361ee;
+        }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #4361ee;
+            border-radius: 3px;
+        }
+        .post-interaction {
+            transition: all 0.2s;
+        }
+        .post-interaction:hover {
+            color: #4361ee;
+            transform: scale(1.05);
+        }
+        .story-ring {
+            background: linear-gradient(45deg, #4361ee, #3a0ca3, #f72585);
+            padding: 2px;
+            border-radius: 50%;
+        }
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #f72585;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .tab-button {
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            background-color: #4361ee;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-dark">ClearVoice</span>
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-primary">Home</a>
+                    <a href="products.html" class="text-gray-600 hover:text-primary">Products</a>
+                    <a href="reviews.html" class="text-gray-600 hover:text-primary">Reviews</a>
+                    <a href="complaints.html" class="text-gray-600 hover:text-primary">Complaints</a>
+                    <a href="compare.html" class="text-gray-600 hover:text-primary">Compare</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input type="text" placeholder="Search..." class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-bell text-gray-600 text-xl"></i>
+                        <span class="notification-dot"></span>
+                    </div>
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Left Sidebar - Profile & Navigation -->
+            <div class="lg:w-1/4">
+                <!-- Profile Card -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 card">
+                    <div class="text-center">
+                        <div class="story-ring inline-block mb-4">
+                            <img src="https://via.placeholder.com/80" alt="User" class="w-20 h-20 rounded-full object-cover">
+                        </div>
+                        <h2 class="text-xl font-bold">Sarah Johnson</h2>
+                        <p class="text-gray-600">@sarahj</p>
+                        <p class="text-gray-500 text-sm mt-2">Verified Reviewer since Jan 2022</p>
+                        
+                        <div class="flex justify-center space-x-4 mt-4">
+                            <div class="text-center">
+                                <div class="font-bold text-primary">247</div>
+                                <div class="text-xs text-gray-500">Reviews</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-primary">3.2K</div>
+                                <div class="text-xs text-gray-500">Followers</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-primary">584</div>
+                                <div class="text-xs text-gray-500">Following</div>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full bg-primary text-white py-2 px-4 rounded-md font-medium hover:bg-secondary transition mt-4">
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h3 class="font-medium mb-4">Dashboard</h3>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="#" class="nav-item active flex items-center text-gray-700 hover:text-primary">
+                                <i class="fas fa-home mr-3"></i> Feed
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item flex items-center text-gray-700 hover:text-primary">
+                                <i class="fas fa-star mr-3"></i> My Reviews
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item flex items-center text-gray-700 hover:text-primary">
+                                <i class="fas fa-flag mr-3"></i> My Complaints
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item flex items-center text-gray-700 hover:text-primary">
+                                <i class="fas fa-heart mr-3"></i> Saved Items
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item flex items-center text-gray-700 hover:text-primary">
+                                <i class="fas fa-users mr-3"></i> Communities
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item flex items-center text-gray-700 hover:text-primary">
+                                <i class="fas fa-cog mr-3"></i> Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Communities -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="font-medium mb-4">My Communities</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <img src="https://via.placeholder.com/40" alt="Community" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <h4 class="font-medium">Tech Enthusiasts</h4>
+                                <p class="text-xs text-gray-500">12.4K members</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <img src="https://via.placeholder.com/40" alt="Community" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <h4 class="font-medium">Home Appliances</h4>
+                                <p class="text-xs text-gray-500">8.7K members</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <img src="https://via.placeholder.com/40" alt="Community" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <h4 class="font-medium">Eco-Friendly Products</h4>
+                                <p class="text-xs text-gray-500">5.2K members</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="block text-center text-primary text-sm mt-4 hover:underline">See all communities</a>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="lg:w-2/4">
+                <!-- Create Post -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 card">
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                        <input type="text" placeholder="Share your experience or ask a question..." class="flex-1 bg-gray-100 rounded-full py-2 px-4 focus:outline-none">
+                    </div>
+                    <div class="flex justify-between">
+                        <div class="flex space-x-4">
+                            <button class="text-gray-500 hover:text-primary flex items-center">
+                                <i class="fas fa-star mr-1"></i> Review
+                            </button>
+                            <button class="text-gray-500 hover:text-primary flex items-center">
+                                <i class="fas fa-flag mr-1"></i> Complaint
+                            </button>
+                            <button class="text-gray-500 hover:text-primary flex items-center">
+                                <i class="fas fa-image mr-1"></i> Media
+                            </button>
+                        </div>
+                        <button class="bg-primary text-white px-4 py-1 rounded-md text-sm font-medium hover:bg-secondary transition">
+                            Post
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Stories -->
+                <div class="bg-white rounded-xl shadow-sm p-4 mb-6 card">
+                    <div class="flex space-x-4 overflow-x-auto pb-2">
+                        <div class="flex flex-col items-center">
+                            <div class="story-ring mb-2">
+                                <img src="https://via.placeholder.com/56" alt="Story" class="w-14 h-14 rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">Your Story</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="story-ring mb-2">
+                                <img src="https://via.placeholder.com/56" alt="Story" class="w-14 h-14 rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">Tech News</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="story-ring mb-2">
+                                <img src="https://via.placeholder.com/56" alt="Story" class="w-14 h-14 rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">Deals</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="story-ring mb-2">
+                                <img src="https://via.placeholder.com/56" alt="Story" class="w-14 h-14 rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">Apple</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="story-ring mb-2">
+                                <img src="https://via.placeholder.com/56" alt="Story" class="w-14 h-14 rounded-full object-cover">
+                            </div>
+                            <span class="text-xs">Samsung</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feed Filter -->
+                <div class="flex space-x-2 mb-6">
+                    <button class="tab-button active px-4 py-2 rounded-md text-sm font-medium">For You</button>
+                    <button class="tab-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100">Following</button>
+                    <button class="tab-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100">Trending</button>
+                </div>
+                
+                <!-- Feed -->
+                <div class="space-y-6">
+                    <!-- Post 1 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h3 class="font-medium">TechGuru</h3>
+                                    <p class="text-xs text-gray-500">2 hours ago · <i class="fas fa-globe-americas"></i></p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-4">Just published my review of the new iPhone 14 Pro. The dynamic island is actually useful once you get used to it, and the camera improvements are significant! 📱✨</p>
+                        
+                        <div class="mb-4">
+                            <img src="https://via.placeholder.com/600x300" alt="Post image" class="w-full h-auto rounded-lg">
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <span class="flex items-center mr-3">
+                                <i class="fas fa-heart text-red-500 mr-1"></i> 248
+                            </span>
+                            <span class="flex items-center mr-3">
+                                <i class="fas fa-comment mr-1"></i> 42
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-share mr-1"></i> 18
+                            </span>
+                        </div>
+                        
+                        <div class="border-t border-b border-gray-100 py-3 mb-4">
+                            <div class="flex justify-between">
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-heart mr-1"></i> Like
+                                </button>
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-comment mr-1"></i> Comment
+                                </button>
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-share-square mr-1"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <img src="https://via.placeholder.com/36" alt="User" class="w-9 h-9 rounded-full mr-3">
+                            <div class="flex-1 bg-gray-100 rounded-2xl px-4 py-2">
+                                <input type="text" placeholder="Write a comment..." class="w-full bg-transparent focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Post 2 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h3 class="font-medium">HomeApplianceExpert</h3>
+                                    <p class="text-xs text-gray-500">5 hours ago · <i class="fas fa-globe-americas"></i></p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-4">After 6 months of use, my Dyson vacuum started losing suction power. Filed a complaint through ClearVoice and got a replacement within a week! 🎉 This platform really works! #CustomerSuccess</p>
+                        
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <span class="flex items-center mr-3">
+                                <i class="fas fa-heart text-red-500 mr-1"></i> 187
+                            </span>
+                            <span class="flex items-center mr-3">
+                                <i class="fas fa-comment mr-1"></i> 31
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-share mr-1"></i> 9
+                            </span>
+                        </div>
+                        
+                        <div class="border-t border-b border-gray-100 py-3 mb-4">
+                            <div class="flex justify-between">
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-heart mr-1"></i> Like
+                                </button>
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-comment mr-1"></i> Comment
+                                </button>
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-share-square mr-1"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <img src="https://via.placeholder.com/36" alt="User" class="w-9 h-9 rounded-full mr-3">
+                            <div class="flex-1 bg-gray-100 rounded-2xl px-4 py-2">
+                                <input type="text" placeholder="Write a comment..." class="w-full bg-transparent focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Post 3 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 card">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h3 class="font-medium">EcoWarrior</h3>
+                                    <p class="text-xs text-gray-500">Yesterday · <i class="fas fa-globe-americas"></i></p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-4">Looking for recommendations for eco-friendly laundry detergents that actually work well. Any suggestions? #EcoFriendly #SustainableLiving</p>
+                        
+                        <div class="mb-4 grid grid-cols-2 gap-2">
+                            <img src="https://via.placeholder.com/300x300" alt="Post image" class="w-full h-40 object-cover rounded-lg">
+                            <img src="https://via.placeholder.com/300x300" alt="Post image" class="w-full h-40 object-cover rounded-lg">
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <span class="flex items-center mr-3">
+                                <i class="fas fa-heart text-red-500 mr-1"></i> 124
+                            </span>
+                            <span class="flex items-center mr-3">
+                                <i class="fas fa-comment mr-1"></i> 47
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-share mr-1"></i> 12
+                            </span>
+                        </div>
+                        
+                        <div class="border-t border-b border-gray-100 py-3 mb-4">
+                            <div class="flex justify-between">
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-heart mr-1"></i> Like
+                                </button>
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-comment mr-1"></i> Comment
+                                </button>
+                                <button class="post-interaction flex items-center text-gray-500">
+                                    <i class="far fa-share-square mr-1"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Comments -->
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <img src="https://via.placeholder.com/32" alt="User" class="w-8 h-8 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-medium text-sm">GreenLife</h4>
+                                    <p class="text-gray-700 text-sm">I've been using EcoClean for over a year now. Works great even on tough stains!</p>
+                                    <div class="flex items-center text-xs text-gray-500 mt-1">
+                                        <span>Like</span> · <span>Reply</span> · <span>3h</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <img src="https://via.placeholder.com/32" alt="User" class="w-8 h-8 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-medium text-sm">SustainableSally</h4>
+                                    <p class="text-gray-700 text-sm">NatureWash pods are amazing! They're biodegradable and come in plastic-free packaging.</p>
+                                    <div class="flex items-center text-xs text-gray-500 mt-1">
+                                        <span>Like</span> · <span>Reply</span> · <span>1h</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start mt-4">
+                            <img src="https://via.placeholder.com/36" alt="User" class="w-9 h-9 rounded-full mr-3">
+                            <div class="flex-1 bg-gray-100 rounded-2xl px-4 py-2">
+                                <input type="text" placeholder="Write a comment..." class="w-full bg-transparent focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Sidebar -->
+            <div class="lg:w-1/4">
+                <!-- Stats Card -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 card">
+                    <h3 class="font-medium mb-4">Your Impact</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Helpful Votes</span>
+                            <span class="font-bold">1.2K</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">People Helped</span>
+                            <span class="font-bold">847</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Trust Score</span>
+                            <span class="font-bold text-primary">92%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Influence Rank</span>
+                            <span class="font-bold">Top 5%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trending Topics -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h3 class="font-medium mb-4">Trending Topics</h3>
+                    <div class="space-y-3">
+                        <a href="#" class="flex items-center justify-between group">
+                            <span class="text-gray-700 group-hover:text-primary">#iPhone14</span>
+                            <span class="text-xs text-gray-500">2.4K posts</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <span class="text-gray-700 group-hover:text-primary">#SustainableProducts</span>
+                            <span class="text-xs text-gray-500">1.8K posts</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <span class="text-gray-700 group-hover:text-primary">#HomeAppliances</span>
+                            <span class="text-xs text-gray-500">1.5K posts</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <span class="text-gray-700 group-hover:text-primary">#CustomerRights</span>
+                            <span class="text-xs text-gray-500">1.2K posts</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Suggested Users -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="font-medium mb-4">People You May Know</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-medium text-sm">TechReviewer</h4>
+                                    <p class="text-xs text-gray-500">124 mutual interests</p>
+                                </div>
+                            </div>
+                            <button class="text-primary hover:text-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-medium text-sm">HomeExpert</h4>
+                                    <p class="text-xs text-gray-500">87 mutual interests</p>
+                                </div>
+                            </div>
+                            <button class="text-primary hover:text-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-medium text-sm">EcoEnthusiast</h4>
+                                    <p class="text-xs text-gray-500">64 mutual interests</p>
+                                </div>
+                            </div>
+                            <button class="text-primary hover:text-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <a href="#" class="block text-center text-primary text-sm mt-4 hover:underline">See more suggestions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ClearVoice</span>
+                    </div>
+                    <p class="text-gray-400">The authentic review and complaint platform that puts consumers first.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="products.html" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="reviews.html" class="text-gray-400 hover:text-white">Reviews</a></li>
+                        <li><a href="complaints.html" class="text-gray-400 hover:text-white">Complaints</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Subscribe</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest features and news.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-md w-full text-dark">
+                        <button class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-secondary transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ClearVoice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Navigation active state
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Like functionality
+            const likeButtons = document.querySelectorAll('.post-interaction:first-child');
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-red-500');
+                    } else {
+                        icon.classList.remove('fas', 'text-red-500');
+                        icon.classList.add('far');
+                    }
+                });
+            });
+            
+            // Story ring animation
+            const storyRings = document.querySelectorAll('.story-ring');
+            storyRings.forEach(ring => {
+                ring.addEventListener('click', function() {
+                    this.style.animation = 'pulse 0.5s';
+                    setTimeout(() => {
+                        this.style.animation = '';
+                    }, 500);
+                });
+            });
+            
+            // Add friend functionality
+            const addFriendButtons = document.querySelectorAll('.fa-user-plus');
+            addFriendButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.remove('fa-user-plus');
+                    this.classList.add('fa-check', 'text-green-500');
+                    
+                    const parent = this.parentElement;
+                    parent.style.opacity = '0.7';
+                    parent.style.pointerEvents = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+.card{
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.trust-score-bar {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.status-pending {
+    background-color: #ffeed9;
+    color: #e67700;
+}
+.status-progress {
+    background-color: #e0e8ff;
+    color: #4263eb;
+}
+.status-resolved {
+    background-color: #d3f9d8;
+    color: #2b8a3e;
+}

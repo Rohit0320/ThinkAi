@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Products - ClearVoice</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        secondary: '#3a0ca3',
+                        accent: '#f72585',
+                        light: '#f8f9fa',
+                        dark: '#212529'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .trust-score-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .comparison-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        .comparison-card.featured {
+            border-left-color: #4361ee;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.15);
+        }
+        .spec-highlight {
+            background-color: #f0f7ff;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .vs-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
+        .radar-chart-container {
+            position: relative;
+            height: 250px;
+        }
+        .add-product-btn {
+            transition: all 0.3s;
+        }
+        .add-product-btn:hover {
+            transform: scale(1.05);
+        }
+        .remove-btn {
+            transition: all 0.2s;
+        }
+        .remove-btn:hover {
+            color: #f72585;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="index.html">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-dark">ClearVoice</span>
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-primary">Home</a>
+                    <a href="product.html" class="text-gray-600 hover:text-primary">Products</a>
+                    <a href="reviews.html" class="text-gray-600 hover:text-primary">Reviews</a>
+                    <a href="complaints.html" class="text-gray-600 hover:text-primary">Complaints</a>
+                    <a href="compare.html" class="text-primary font-medium">Compare</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input type="text" placeholder="Search products..." class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">Write Review</button>
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Page Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-dark mb-2">Compare Products</h1>
+            <p class="text-gray-600 max-w-3xl mx-auto">Side-by-side comparison of products based on authentic reviews, trust scores, and technical specifications to help you make informed decisions.</p>
+        </div>
+
+        <!-- Comparison Tool -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <h2 class="text-xl font-medium">Product Comparison</h2>
+                
+                <div class="flex flex-wrap gap-4">
+                    <select class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option>All Categories</option>
+                        <option>Smartphones</option>
+                        <option>Laptops</option>
+                        <option>Headphones</option>
+                        <option>Smart Home</option>
+                    </select>
+                    
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md font-medium hover:bg-gray-200 transition flex items-center">
+                        <i class="fas fa-sliders-h mr-2"></i> Filters
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Product 1 -->
+                <div class="comparison-card featured bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="vs-badge">VS</div>
+                        <button class="remove-btn text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="text-center mb-4">
+                        <img src="https://via.placeholder.com/150" alt="iPhone 13 Pro" class="w-32 h-32 mx-auto object-contain">
+                    </div>
+                    <h3 class="text-lg font-medium text-center mb-2">iPhone 13 Pro</h3>
+                    <div class="flex justify-center items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm">4.7</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-primary mb-1">92%</div>
+                        <div class="text-sm text-gray-600">Trust Score</div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="comparison-card bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex justify-end mb-4">
+                        <button class="remove-btn text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="text-center mb-4">
+                        <img src="https://via.placeholder.com/150" alt="Samsung Galaxy S22" class="w-32 h-32 mx-auto object-contain">
+                    </div>
+                    <h3 class="text-lg font-medium text-center mb-2">Galaxy S22</h3>
+                    <div class="flex justify-center items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm">4.3</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-primary mb-1">85%</div>
+                        <div class="text-sm text-gray-600">Trust Score</div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="comparison-card bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex justify-end mb-4">
+                        <button class="remove-btn text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="text-center mb-4">
+                        <img src="https://via.placeholder.com/150" alt="Google Pixel 6" class="w-32 h-32 mx-auto object-contain">
+                    </div>
+                    <h3 class="text-lg font-medium text-center mb-2">Pixel 6</h3>
+                    <div class="flex justify-center items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm">4.8</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-primary mb-1">89%</div>
+                        <div class="text-sm text-gray-600">Trust Score</div>
+                    </div>
+                </div>
+                
+                <!-- Add Product Card -->
+                <div class="add-product-btn bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 p-4 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                        <i class="fas fa-plus text-2xl text-gray-400"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-center">Add Product</h3>
+                    <p class="text-sm text-gray-500 text-center mt-2">Compare up to 4 products</p>
+                </div>
+            </div>
+            
+            <div class="flex justify-center">
+                <button class="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-secondary transition flex items-center">
+                    <i class="fas fa-sync-alt mr-2"></i> Compare Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Comparison Results -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-medium">Comparison Results</h2>
+                <div class="flex items-center text-sm text-gray-500">
+                    <span class="w-3 h-3 rounded-full bg-primary mr-1"></span>
+                    Better
+                    <span class="w-3 h-3 rounded-full bg-gray-300 mx-3 mr-1"></span>
+                    Similar
+                    <span class="w-3 h-3 rounded-full bg-red-400 ml-3 mr-1"></span>
+                    Worse
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Specification</th>
+                            <th scope="col" class="px-6 py-3">iPhone 13 Pro</th>
+                            <th scope="col" class="px-6 py-3">Galaxy S22</th>
+                            <th scope="col" class="px-6 py-3">Pixel 6</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Trust Score Row -->
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Trust Score</th>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                        <div class="bg-primary h-2.5 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                    <span class="font-bold text-primary">92%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                        <div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span>85%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                                        <div class="bg-primary h-2.5 rounded-full" style="width: 89%"></div>
+                                    </div>
+                                    <span>89%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Rating Row -->
+                        <tr class="bg-gray-50 border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Average Rating</th>
+                            <td class="px-6 py-4">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span class="ml-2 text-gray-700">4.7</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="ml-2 text-gray-700">4.3</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-2 text-gray-700">4.8</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Reviews Row -->
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Verified Reviews</th>
+                            <td class="px-6 py-4 spec-highlight">1,243</td>
+                            <td class="px-6 py-4">987</td>
+                            <td class="px-6 py-4">1,087</td>
+                        </tr>
+                        
+                        <!-- Complaints Row -->
+                        <tr class="bg-gray-50 border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Complaints</th>
+                            <td class="px-6 py-4">24</td>
+                            <td class="px-6 py-4">31</td>
+                            <td class="px-6 py-4 spec-highlight">18</td>
+                        </tr>
+                        
+                        <!-- Resolution Rate Row -->
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Resolution Rate</th>
+                            <td class="px-6 py-4">87%</td>
+                            <td class="px-6 py-4">79%</td>
+                            <td class="px-6 py-4 spec-highlight">91%</td>
+                        </tr>
+                        
+                        <!-- Price Row -->
+                        <tr class="bg-gray-50 border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Price</th>
+                            <td class="px-6 py-4">$999</td>
+                            <td class="px-6 py-4 spec-highlight">$799</td>
+                            <td class="px-6 py-4">$899</td>
+                        </tr>
+                        
+                        <!-- Display Row -->
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Display</th>
+                            <td class="px-6 py-4">6.1" OLED</td>
+                            <td class="px-6 py-4">6.1" Dynamic AMOLED</td>
+                            <td class="px-6 py-4">6.4" OLED</td>
+                        </tr>
+                        
+                        <!-- Camera Row -->
+                        <tr class="bg-gray-50 border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Camera</th>
+                            <td class="px-6 py-4 spec-highlight">Triple 12MP</td>
+                            <td class="px-6 py-4">Triple 50+10+12MP</td>
+                            <td class="px-6 py-4">Dual 50+12MP</td>
+                        </tr>
+                        
+                        <!-- Battery Row -->
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Battery</th>
+                            <td class="px-6 py-4">3095 mAh</td>
+                            <td class="px-6 py-4">3700 mAh</td>
+                            <td class="px-6 py-4 spec-highlight">4614 mAh</td>
+                        </tr>
+                        
+                        <!-- Storage Row -->
+                        <tr class="bg-gray-50 border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">Storage</th>
+                            <td class="px-6 py-4">128GB-1TB</td>
+                            <td class="px-6 py-4">128GB-256GB</td>
+                            <td class="px-6 py-4">128GB-256GB</td>
+                        </tr>
+                        
+                        <!-- RAM Row -->
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium">RAM</th>
+                            <td class="px-6 py-4">6GB</td>
+                            <td class="px-6 py-4 spec-highlight">8GB</td>
+                            <td class="px-6 py-4">8GB</td>
+                        </tr>
+                        
+                        <!-- Processor Row -->
+                        <tr class="bg-gray-50">
+                            <th scope="row" class="px-6 py-4 font-medium">Processor</th>
+                            <td class="px-6 py-4 spec-highlight">A15 Bionic</td>
+                            <td class="px-6 py-4">Snapdragon 8 Gen 1</td>
+                            <td class="px-6 py-4">Google Tensor</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Visual Comparison -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Radar Chart -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-xl font-medium mb-4">Feature Comparison</h2>
+                <div class="radar-chart-container">
+                    <canvas id="featureRadar"></canvas>
+                </div>
+            </div>
+            
+            <!-- Trust Score Breakdown -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-xl font-medium mb-4">Trust Score Breakdown</h2>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Review Authenticity</span>
+                            <span class="text-sm font-bold">92%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Complaint Resolution</span>
+                            <span class="text-sm font-bold">87%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 87%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">User Satisfaction</span>
+                            <span class="text-sm font-bold">94%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 94%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Brand Response</span>
+                            <span class="text-sm font-bold">89%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-500 h-2 rounded-full" style="width: 89%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Reviews Summary -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <h2 class="text-xl font-medium mb-4">User Reviews Summary</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <h3 class="font-medium mb-2">iPhone 13 Pro</h3>
+                    <div class="flex justify-center text-yellow-400 mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">"Excellent battery life and camera quality. The 120Hz display is smooth and responsive."</p>
+                    <div class="text-xs text-gray-500">- John D., Verified Owner</div>
+                </div>
+                
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <h3 class="font-medium mb-2">Galaxy S22</h3>
+                    <div class="flex justify-center text-yellow-400 mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">"Great performance but battery could be better. The camera is impressive in daylight conditions."</p>
+                    <div class="text-xs text-gray-500">- Sarah M., Verified Owner</div>
+                </div>
+                
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <h3 class="font-medium mb-2">Pixel 6</h3>
+                    <div class="flex justify-center text-yellow-400 mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">"Outstanding camera software and clean Android experience. Battery life exceeds expectations."</p>
+                    <div class="text-xs text-gray-500">- Michael T., Verified Owner</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-medium mb-4">Our Recommendation</h2>
+            
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+                <div class="text-center md:w-1/3">
+                    <img src="https://via.placeholder.com/200" alt="iPhone 13 Pro" class="w-40 h-40 mx-auto object-contain mb-4">
+                    <h3 class="text-lg font-medium mb-2">Best Overall</h3>
+                    <div class="flex justify-center text-yellow-400 mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-primary mb-2">92%</div>
+                    <p class="text-gray-600">Trust Score</p>
+                </div>
+                
+                <div class="md:w-2/3">
+                    <p class="text-gray-700 mb-4">Based on our analysis of verified reviews, complaint resolution rates, and overall user satisfaction, the <span class="font-medium">iPhone 13 Pro</span> emerges as the best overall choice among these smartphones.</p>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <h4 class="font-medium text-blue-800 mb-2">Why it wins:</h4>
+                        <ul class="list-disc list-inside text-blue-700 space-y-1">
+                            <li>Highest trust score (92%) based on authentic reviews</li>
+                            <li>Excellent complaint resolution rate (87%)</li>
+                            <li>Superior build quality and long-term reliability</li>
+                            <li>Consistent performance across all metrics</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-primary text-white px-6 py-2 rounded-md font-medium hover:bg-secondary transition">
+                            View Details
+                        </button>
+                        <button class="bg-gray-100 text-gray-700 px-6 py-2 rounded-md font-medium hover:bg-gray-200 transition">
+                            Compare More Products
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-microphone-alt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ClearVoice</span>
+                    </div>
+                    <p class="text-gray-400">The authentic review and complaint platform that puts consumers first.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="products.html" class="text-gray-400 hover:text-white">Products</a></li>
+                        <li><a href="reviews.html" class="text-gray-400 hover:text-white">Reviews</a></li>
+                        <li><a href="complaints.html" class="text-gray-400 hover:text-white">Complaints</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium mb-4">Subscribe</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest features and news.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-md w-full text-dark">
+                        <button class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-secondary transition">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ClearVoice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Radar Chart for Feature Comparison
+        document.addEventListener('DOMContentLoaded', function() {
+            const radarCtx = document.getElementById('featureRadar').getContext('2d');
+            const radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Performance', 'Camera', 'Battery', 'Display', 'Build Quality', 'Software'],
+                    datasets: [
+                        {
+                            label: 'iPhone 13 Pro',
+                            data: [95, 92, 88, 90, 94, 91],
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.2)',
+                            pointBackgroundColor: '#4361ee',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#4361ee'
+                        },
+                        {
+                            label: 'Galaxy S22',
+                            data: [89, 90, 82, 93, 87, 85],
+                            borderColor: '#f72585',
+                            backgroundColor: 'rgba(247, 37, 133, 0.2)',
+                            pointBackgroundColor: '#f72585',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#f72585'
+                        },
+                        {
+                            label: 'Pixel 6',
+                            data: [87, 95, 91, 86, 85, 93],
+                            borderColor: '#4cc9f0',
+                            backgroundColor: 'rgba(76, 201, 240, 0.2)',
+                            pointBackgroundColor: '#4cc9f0',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#4cc9f0'
+                        }
+                    ]
+                },
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0.2
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 50,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+            
+            // Add interaction to product cards
+            const productCards = document.querySelectorAll('.comparison-card');
+            productCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('featured');
+                });
+            });
+            
+            // Add product functionality
+            const addProductBtn = document.querySelector('.add-product-btn');
+            addProductBtn.addEventListener('click', function() {
+                alert('Product selection modal would open here');
+            });
+            
+            // Remove product functionality
+            const removeBtns = document.querySelectorAll('.remove-btn');
+            removeBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = this.closest('.comparison-card');
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                    }, 300);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
